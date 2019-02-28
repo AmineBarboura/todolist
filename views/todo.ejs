@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Ma todolist</title>
+        <style>
+            a {text-decoration: none; color: black;}
+        </style>
+    </head>
+
+    <body>
+        <h1>Ma todolist</h1>
+
+        <ul id="todolist">
+        <% todolist.forEach(function(todo, index) { %>
+            <li><span style="cursor:pointer" id="<%= index %>">✘</span> <%= todo %></li>
+        <% }); %>
+        </ul>
+
+        <form action="/" method="post" id="form_add">
+            <p>
+                <label for="newtodo">Que dois-je faire ?</label>
+                <input type="text" name="newtodo" id="newtodo" autofocus />
+                <input type="submit" />
+            </p>
+        </form>
+    </body>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:8080');
+        $('#form_add').submit(function(event){
+            event.preventDefault();
+            var newtodo=$('#newtodo').val();
+            socket.emit("addtodo",newtodo);
+            $('#newtodo').val('').focus();
+        });
+        $('span').on('click',function(){
+            socket.emit("deletetodo",$(this).attr('id'));
+        });
+        socket.on("update",function(todolist){
+            $('#todolist').html("");
+            todolist.forEach(function(todo,index){
+                $('#todolist').append('<li><span  style="cursor:pointer" id="'+ index +'">✘</span>'+ todo +'</li>');
+            });
+                $('span').on('click',function(){
+                socket.emit("deletetodo",$(this).attr('id'));
+            });
+        });
+
+
+    </script>
+</html>
