@@ -1,0 +1,11 @@
+span {text-decoration: none; color: black;}
+body{
+    text-align: center;
+}
+ul {
+	min-height: 80px;
+	width: 150px;
+	margin: auto;
+	background-color: rgba(0,0,254,0.3);
+	padding-left: 0;
+}
